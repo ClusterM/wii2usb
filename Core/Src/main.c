@@ -136,40 +136,39 @@ int main(void)
 					wii_accessory_data.button_r, wii_accessory_data.button_zl,
 					wii_accessory_data.button_zr, wii_accessory_data.wtf);
 #endif
-
-			joystick_data.x = wii_accessory_data.jx;
-			joystick_data.y = wii_accessory_data.jy;
-			if (wii_accessory_data.data_format == 0) // Nunchuck
+			memset(&joystick_data, 0, sizeof(joystick_data));
+			joystick_data.LX = 0x80 + wii_accessory_data.jx;
+			joystick_data.LY = 0x80 + wii_accessory_data.jy;
+			if (wii_accessory_data.data_format == 0)
 			{
-				// Accelerometer
-				joystick_data.rx = wii_accessory_data.acc_x;
-				joystick_data.ry = wii_accessory_data.acc_y;
-				joystick_data.rz = wii_accessory_data.acc_z;
+				// Nunchuck
+				// Accelerometers
+				joystick_data.RX = 0x80 + wii_accessory_data.acc_x;
+				joystick_data.RY = 0x80 + wii_accessory_data.acc_y;
+				//joystick_data.ExtraX = 0x80 + wii_accessory_data.acc_z;
 			} else {
-				joystick_data.z = wii_accessory_data.rx;
-				joystick_data.rx = wii_accessory_data.ry;
+				joystick_data.RX = 0x80 + wii_accessory_data.rx;
+				joystick_data.RY = 0x80 + wii_accessory_data.ry;
 				// Unsigned for trigger analog buttons
-				joystick_data.ry = wii_accessory_data.tl - 128;
-				joystick_data.rz = wii_accessory_data.tr - 128;
+				//joystick_data.ExtraX = wii_accessory_data.tl;
+				//joystick_data.ExtraY = wii_accessory_data.tr;
 			}
-			joystick_data.buttons = (wii_accessory_data.button_a << 0)
-					| (wii_accessory_data.button_b << 1)
-					| (wii_accessory_data.button_x << 2)
-					| (wii_accessory_data.button_y << 3)
-					| (wii_accessory_data.button_select << 4)
-					| (wii_accessory_data.button_start << 5)
-					| (wii_accessory_data.button_home << 6)
-					| (wii_accessory_data.button_l << 7)
-					| (wii_accessory_data.button_r << 8)
-					| (wii_accessory_data.button_zl << 9)
-					| (wii_accessory_data.button_zr << 10);
+			joystick_data.A = wii_accessory_data.button_a;
+			joystick_data.B = wii_accessory_data.button_b;
+			joystick_data.X = wii_accessory_data.button_x;
+			joystick_data.Y = wii_accessory_data.button_y;
+			joystick_data.L = wii_accessory_data.button_l;
+			joystick_data.R = wii_accessory_data.button_r;
+			joystick_data.ZL = wii_accessory_data.button_zl;
+			joystick_data.ZR = wii_accessory_data.button_zr;
+			joystick_data.minus = wii_accessory_data.button_select;
+			joystick_data.plus = wii_accessory_data.button_start;
+
 			if (wii_accessory_data.dpad_up && wii_accessory_data.dpad_right)
 				joystick_data.hat_switch = 1;
-			else if (wii_accessory_data.dpad_right
-					&& wii_accessory_data.dpad_down)
+			else if (wii_accessory_data.dpad_right && wii_accessory_data.dpad_down)
 				joystick_data.hat_switch = 3;
-			else if (wii_accessory_data.dpad_down
-					&& wii_accessory_data.dpad_left)
+			else if (wii_accessory_data.dpad_down && wii_accessory_data.dpad_left)
 				joystick_data.hat_switch = 5;
 			else if (wii_accessory_data.dpad_left && wii_accessory_data.dpad_up)
 				joystick_data.hat_switch = 7;
@@ -249,6 +248,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+
   /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
@@ -368,5 +368,3 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

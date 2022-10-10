@@ -182,6 +182,12 @@ int main(void)
 				joystick_data.hat_switch = 6;
 			else
 				joystick_data.hat_switch = 8;
+
+			// L + R + Select + Start = Home
+			joystick_data.home |= wii_accessory_data.button_l
+				&& wii_accessory_data.button_r
+				&& wii_accessory_data.button_select
+				&& wii_accessory_data.button_start;
 		} else {
 			memset(&joystick_data, 0, sizeof(joystick_data));
 		}

@@ -212,7 +212,7 @@ int main(void)
 			// Blink on error
 			HAL_GPIO_WritePin(
 			LED_USB_GPIO_Port, LED_USB_Pin,
-					(HAL_GetTick() % 100 < 50) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+					(HAL_GetTick() % 1000 > 100) ? GPIO_PIN_SET : GPIO_PIN_RESET);
 			break;
 		}
 
